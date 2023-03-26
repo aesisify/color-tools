@@ -1,6 +1,6 @@
-# Color Helper
+# Color Tools
 
-This is a web application built with Vue 2.7 that generates color ramps for pixel art projects although these can palettes can be used anywhere. It allows users to generate color ramps based on a base color, with options for number of colors, saturation and brightness ranges, and hue shifts.
+This is a web application built with Vue 2.7 that generates color ramps for mainly pixel art projects, but ramps can be used anywhere if you wish. It allows users to generate color ramps based on a base color, with options for number of colors, saturation and brightness ranges, and hue shifts.
 
 Uses [chroma-js](https://github.com/gka/chroma.js/) and [color-names](https://github.com/meodai/color-names).
 
