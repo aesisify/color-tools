@@ -19,6 +19,12 @@ npm install
 npm run dev
 ```
 
+## Todo
+
+* Save system for generated palettes.
+* Integrate [color-thief](https://github.com/lokesh/color-thief) for palette extraction from images.
+* A basic homepage?
+
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request.
