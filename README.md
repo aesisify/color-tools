@@ -6,7 +6,7 @@ Uses [chroma-js](https://github.com/gka/chroma.js/) and [color-names](https://gi
 
 ## Usage
 
-To use the application, simply visit the [live demo](https://aesisify.github.io/color-tools/) or clone this repository.
+To use the application, simply visit the [live demo](https://aesisify.github.io/color-tools/#/ramp-gen) or clone this repository.
 
 Once the application is loaded, you can select a base color by clicking on the color picker or entering a hex value. Then, adjust the other settings to generate your desired color ramp. Finally, you can copy the colors by clicking on them or copying the output JSON data at the bottom of the page.
 
