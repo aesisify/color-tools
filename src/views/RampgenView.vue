@@ -122,7 +122,7 @@
 							</template>
 							<template v-else>
 								<color-picker
-									class="bg-gray-800 p-2 rounded mt-1"
+									class="bg-gray-700 p-2 rounded mt-1"
 									v-model="startColorSettings.selectedColor"></color-picker>
 							</template>
 						</div>
@@ -188,7 +188,7 @@
 							</template>
 							<template v-else>
 								<color-picker
-									class="bg-gray-800 p-2 rounded mt-1"
+									class="bg-gray-700 p-2 rounded mt-1"
 									v-model="endColorSettings.selectedColor"></color-picker>
 							</template>
 						</div>
@@ -286,8 +286,8 @@
 				this.middleColor = chroma.hex(this.$route.query.color);
 			}
 
-			this.startColorSettings.selectedColor = this.middleColor.brighten(1);
-			this.endColorSettings.selectedColor = this.middleColor.brighten(-1);
+			this.startColorSettings.selectedColor = this.middleColor.brighten(1.5);
+			this.endColorSettings.selectedColor = this.middleColor.brighten(-1.5);
 		},
 		computed: {
 			outJson() {

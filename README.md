@@ -1,3 +1,8 @@
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/aesisify/color-tools/deploy.yml?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/aesisify/color-tools?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/aesisify/color-tools?style=flat-square)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/aesisify/color-tools?style=flat-square)
+
 # Color Tools
 
 This is a web application built with Vue that generates color ramps. It allows
