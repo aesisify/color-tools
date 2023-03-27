@@ -1,9 +1,21 @@
 <template>
 	<section class="p-6">
 		<div>
+			<div class="flex justify-center bg-gray-900 p-2 rounded">
+				<div
+					@click="copyToClipboard(color)"
+					class="group flex relative max-h-16 flex-grow items-center justify-center aspect-square cursor-pointer"
+					v-for="color in colorRamp"
+					:style="{ background: color }">
+					<div
+						class="hidden group-hover:flex absolute top-2 right-2 bg-gray-800 bg-opacity-50 rounded p-0.5">
+						<Icon icon="ph:copy"></Icon>
+					</div>
+				</div>
+			</div>
 			<color-picker
-				class="bg-gray-900 p-2 rounded"
-				v-model="selectedColor"></color-picker>
+				class="bg-gray-900 p-2 rounded mt-3"
+				v-model="middleColor"></color-picker>
 			<div class="mt-3 bg-gray-900 p-2 rounded">
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 					<div>
@@ -13,11 +25,16 @@
 						</div>
 						<div class="p-2 flex flex-col gap-2">
 							<div class="flex flex-col">
-								<label class="text-xs font-medium mb-1">Color Count</label>
+								<label class="text-xs font-medium mb-1">
+									Color Count | {{ generalSettings.colorCount }}
+								</label>
 								<input
-									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.colorCount"
-									type="number" />
+									class="bg-gray-800 p-1 px-2 rounded slider"
+									v-model="generalSettings.colorCount"
+									max="24"
+									min="3"
+									step="1"
+									type="range" />
 							</div>
 							<div class="flex flex-col">
 								<label class="text-xs font-medium mb-1">
@@ -26,7 +43,7 @@
 
 								<select
 									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.interpolation">
+									v-model="generalSettings.interpolation">
 									<option value="lrgb">Linear RGB (Default)</option>
 									<option value="rgb">RGB</option>
 									<option value="lab">Lab</option>
@@ -38,11 +55,145 @@
 								<input
 									type="checkbox"
 									class="accent-indigo-500 hover:accent-indigo-600 focus:accent-indigo-700 rounded"
-									v-model="settings.correctLightness"
+									v-model="generalSettings.correctLightness"
 									checked />
 								Correct Lightness
 							</label>
 						</div>
+					</div>
+					<div>
+						<div
+							class="text-sm uppercase tracking-widest border-b px-2 py-1 border-b-indigo-500">
+							Start Color Settings
+						</div>
+						<div class="p-2 flex flex-col gap-2">
+							<div class="flex flex-col">
+								<label class="text-xs font-medium mb-1">Start Color Mode</label>
+
+								<select
+									class="bg-gray-800 p-1 px-2 rounded"
+									v-model="startColorSettings.mode">
+									<option value="generate">Hue Shift</option>
+									<option value="select">Select Manually</option>
+								</select>
+							</div>
+							<template v-if="startColorSettings.mode === 'generate'">
+								<div class="flex flex-col">
+									<label class="text-xs font-medium mb-1">
+										<div class="flex items-center justify-start gap-1">
+											<div>Hue Shift | {{ startColorSettings.hueShift }}</div>
+											<div
+												:style="{ background: hueShift.start }"
+												class="h-3 w-3 rounded"></div>
+										</div>
+									</label>
+									<input
+										class="bg-gray-800 p-1 px-2 rounded slider"
+										v-model="startColorSettings.hueShift"
+										max="100"
+										min="-100"
+										step="0.1"
+										type="range" />
+								</div>
+								<div class="flex flex-col">
+									<label class="text-xs font-medium mb-1">
+										Brightness | {{ startColorSettings.brightness }}
+									</label>
+									<input
+										class="bg-gray-800 p-1 px-2 rounded slider"
+										v-model="startColorSettings.brightness"
+										min="-5"
+										max="5"
+										step="0.1"
+										type="range" />
+								</div>
+								<div class="flex flex-col">
+									<label class="text-xs font-medium mb-1">
+										Saturation | {{ startColorSettings.saturation }}
+									</label>
+									<input
+										class="bg-gray-800 p-1 px-2 rounded slider"
+										v-model="startColorSettings.saturation"
+										min="-3"
+										max="3"
+										step="0.1"
+										type="range" />
+								</div>
+							</template>
+							<template v-else>
+								<color-picker
+									class="bg-gray-800 p-2 rounded mt-1"
+									v-model="startColorSettings.selectedColor"></color-picker>
+							</template>
+						</div>
+					</div>
+					<div>
+						<div
+							class="text-sm uppercase tracking-widest border-b px-2 py-1 border-b-indigo-500">
+							End Color Settings
+						</div>
+						<div class="p-2 flex flex-col gap-2">
+							<div class="flex flex-col">
+								<label class="text-xs font-medium mb-1">End Color Mode</label>
+
+								<select
+									class="bg-gray-800 p-1 px-2 rounded"
+									v-model="endColorSettings.mode">
+									<option value="generate">Hue Shift</option>
+									<option value="select">Select Manually</option>
+								</select>
+							</div>
+							<template v-if="endColorSettings.mode === 'generate'">
+								<div class="flex flex-col">
+									<label class="text-xs font-medium mb-1">
+										<div class="flex items-center justify-start gap-1">
+											<div>Hue Shift | {{ endColorSettings.hueShift }}</div>
+											<div
+												:style="{ background: hueShift.end }"
+												class="h-3 w-3 rounded"></div>
+										</div>
+									</label>
+									<input
+										class="bg-gray-800 p-1 px-2 rounded slider"
+										v-model="endColorSettings.hueShift"
+										max="100"
+										min="-100"
+										step="0.1"
+										type="range" />
+								</div>
+								<div class="flex flex-col">
+									<label class="text-xs font-medium mb-1">
+										Brightness | {{ endColorSettings.brightness }}
+									</label>
+									<input
+										class="bg-gray-800 p-1 px-2 rounded slider"
+										v-model="endColorSettings.brightness"
+										min="-5"
+										max="5"
+										step="0.1"
+										type="range" />
+								</div>
+								<div class="flex flex-col">
+									<label class="text-xs font-medium mb-1">
+										Saturation | {{ endColorSettings.saturation }}
+									</label>
+									<input
+										class="bg-gray-800 p-1 px-2 rounded slider"
+										v-model="endColorSettings.saturation"
+										min="-3"
+										max="3"
+										step="0.1"
+										type="range" />
+								</div>
+							</template>
+							<template v-else>
+								<color-picker
+									class="bg-gray-800 p-2 rounded mt-1"
+									v-model="endColorSettings.selectedColor"></color-picker>
+							</template>
+						</div>
+					</div>
+					<div class="col-span-3">
 						<div
 							class="text-sm uppercase tracking-widest border-b px-2 py-1 border-b-indigo-500">
 							Info
@@ -78,98 +229,9 @@
 							</div>
 						</div>
 					</div>
-					<div>
-						<div
-							class="text-sm uppercase tracking-widest border-b px-2 py-1 border-b-indigo-500">
-							Start Color Settings
-						</div>
-						<div class="p-2 flex flex-col gap-2">
-							<div class="flex flex-col">
-								<label class="text-xs font-medium mb-1">
-									<div class="flex items-center justify-start gap-1">
-										<div>Hue Shift</div>
-										<div
-											:style="{ background: hueShift.startNewHue }"
-											class="h-3 w-3 rounded"></div>
-									</div>
-								</label>
-								<input
-									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.startHueShift"
-									step="0.1"
-									type="number" />
-							</div>
-							<div class="flex flex-col">
-								<label class="text-xs font-medium mb-1">Brightness</label>
-								<input
-									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.startBrightness"
-									step="0.1"
-									type="number" />
-							</div>
-							<div class="flex flex-col">
-								<label class="text-xs font-medium mb-1">Saturation</label>
-								<input
-									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.startSaturation"
-									step="0.1"
-									type="number" />
-							</div>
-						</div>
-					</div>
-					<div>
-						<div
-							class="text-sm uppercase tracking-widest border-b px-2 py-1 border-b-indigo-500">
-							End Color Settings
-						</div>
-						<div class="p-2 flex flex-col gap-2">
-							<div class="flex flex-col">
-								<label class="text-xs font-medium mb-1">
-									<div class="flex items-center justify-start gap-1">
-										<div>Hue Shift</div>
-										<div
-											:style="{ background: hueShift.endNewHue }"
-											class="h-3 w-3 rounded"></div>
-									</div>
-								</label>
-								<input
-									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.endHueShift"
-									step="0.1"
-									type="number" />
-							</div>
-							<div class="flex flex-col">
-								<label class="text-xs font-medium mb-1">Brightness</label>
-								<input
-									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.endBrightness"
-									step="0.1"
-									type="number" />
-							</div>
-							<div class="flex flex-col">
-								<label class="text-xs font-medium mb-1">Saturation</label>
-								<input
-									class="bg-gray-800 p-1 px-2 rounded"
-									v-model="settings.endSaturation"
-									step="0.1"
-									type="number" />
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
-			<div class="flex justify-center mt-3 bg-gray-900 p-2 rounded">
-				<div
-					@click="copyToClipboard(color)"
-					class="group flex relative max-h-16 flex-grow items-center justify-center aspect-square cursor-pointer"
-					v-for="color in colorRamp"
-					:style="{ background: color }">
-					<div
-						class="hidden group-hover:flex absolute top-2 right-2 bg-gray-800 bg-opacity-50 rounded p-0.5">
-						<Icon icon="ph:copy"></Icon>
-					</div>
-				</div>
-			</div>
+
 			<div
 				class="bg-gray-900 p-3 mt-3 rounded font-mono"
 				style="white-space: pre-wrap"
@@ -184,35 +246,48 @@
 	export default {
 		data() {
 			return {
-				selectedColor: chroma.random(),
 				colorRamp: [],
+				middleColor: chroma.random(),
+				generalSettings: {
+					colorCount: 6,
+					interpolation: "lrgb",
+					correctLightness: false,
+				},
+				startColorSettings: {
+					mode: "generate",
+					selectedColor: null,
+					newHue: null,
+					hueShift: 25,
+					brightness: 1,
+					saturation: 0.5,
+				},
+				endColorSettings: {
+					mode: "generate",
+					selectedColor: null,
+					newHue: null,
+					hueShift: -25,
+					brightness: -1,
+					saturation: -0.5,
+				},
+				hueShift: {
+					start: null,
+					end: null,
+				},
 				accesability: {
 					paletteContrast: 0,
 					paletteDeltaE: 0,
 					lowestContrast: 0,
 					lowestDeltaE: 0,
 				},
-				hueShift: {
-					startNewHue: null,
-					endNewHue: null,
-				},
-				settings: {
-					colorCount: 10,
-					startHueShift: 25,
-					endHueShift: -25,
-					startBrightness: 2,
-					endBrightness: -2,
-					startSaturation: 1,
-					endSaturation: -1,
-					interpolation: "lrgb",
-					correctLightness: true,
-				},
 			};
 		},
 		created() {
 			if (this.$route.query.color) {
-				this.selectedColor = chroma.hex(this.$route.query.color);
+				this.middleColor = chroma.hex(this.$route.query.color);
 			}
+
+			this.startColorSettings.selectedColor = this.middleColor.brighten(1);
+			this.endColorSettings.selectedColor = this.middleColor.brighten(-1);
 		},
 		computed: {
 			outJson() {
@@ -225,14 +300,26 @@
 			},
 		},
 		watch: {
-			selectedColor: {
+			middleColor: {
 				handler(val) {
 					this.calculateRamp();
 				},
 				immediate: true,
 				deep: true,
 			},
-			settings: {
+			generalSettings: {
+				handler(val) {
+					this.calculateRamp();
+				},
+				deep: true,
+			},
+			startColorSettings: {
+				handler(val) {
+					this.calculateRamp();
+				},
+				deep: true,
+			},
+			endColorSettings: {
 				handler(val) {
 					this.calculateRamp();
 				},
@@ -249,57 +336,69 @@
 			},
 			calculateRamp() {
 				this.colorRamp = [];
-				const val = this.selectedColor;
+				const val = this.middleColor;
 
-				let startColor = val
-					.brighten(this.settings.startBrightness)
-					.saturate(this.settings.startSaturation);
+				let sCol;
+				if (this.startColorSettings.mode === "generate") {
+					sCol = val
+						.brighten(this.startColorSettings.brightness)
+						.saturate(this.startColorSettings.saturation);
 
-				const startValues = startColor.hsv();
-				const sh =
-					(((startValues[0] + Number(this.settings.startHueShift)) % 360) +
-						360) %
-					360;
-				const ss = startValues[1];
-				const sv = startValues[2];
+					const startValues = sCol.hsv();
 
-				this.hueShift.startNewHue = chroma.hsv(sh, 1, 1);
-				startColor = chroma.hsv(sh, ss, sv);
+					const sh =
+						(((startValues[0] + Number(this.startColorSettings.hueShift)) %
+							360) +
+							360) %
+						360;
+					const ss = startValues[1];
+					const sv = startValues[2];
 
-				let endColor = val
-					.brighten(this.settings.endBrightness)
-					.saturate(this.settings.endSaturation);
-
-				const endValues = endColor.hsv();
-				const eh =
-					(((endValues[0] + Number(this.settings.endHueShift)) % 360) + 360) %
-					360;
-				const es = endValues[1];
-				const ev = endValues[2];
-
-				this.hueShift.endNewHue = chroma.hsv(eh, 1, 1);
-				endColor = chroma.hsv(eh, es, ev);
-
-				if (this.settings.correctLightness) {
-					this.colorRamp = chroma
-						.scale([startColor, val, endColor])
-						.cache(false)
-						.mode(this.settings.interpolation)
-						.correctLightness()
-						.colors(this.settings.colorCount);
+					this.hueShift.start = chroma.hsv(sh, 1, 1);
+					sCol = chroma.hsv(sh, ss, sv);
 				} else {
-					this.colorRamp = chroma
-						.scale([startColor, val, endColor])
-						.cache(false)
-						.mode(this.settings.interpolation)
-						.colors(this.settings.colorCount);
+					sCol = this.startColorSettings.selectedColor;
 				}
 
-				this.accesability.paletteContrast = chroma.contrast(
-					startColor,
-					endColor
-				);
-				this.accesability.paletteDeltaE = chroma.deltaE(startColor, endColor);
+				let eCol;
+				if (this.endColorSettings.mode === "generate") {
+					eCol = val
+						.brighten(this.endColorSettings.brightness)
+						.saturate(this.endColorSettings.saturation);
+
+					const endValues = eCol.hsv();
+
+					const eh =
+						(((endValues[0] + Number(this.endColorSettings.hueShift)) % 360) +
+							360) %
+						360;
+					const es = endValues[1];
+					const ev = endValues[2];
+
+					this.hueShift.end = chroma.hsv(eh, 1, 1);
+					eCol = chroma.hsv(eh, es, ev);
+				} else {
+					eCol = this.endColorSettings.selectedColor;
+				}
+
+				if (this.generalSettings.correctLightness) {
+					this.colorRamp = chroma
+						.scale([sCol, val, eCol])
+						.cache(false)
+						.mode(this.generalSettings.interpolation)
+						.correctLightness()
+						.colors(this.generalSettings.colorCount);
+				} else {
+					this.colorRamp = chroma
+						.scale([sCol, val, eCol])
+						.cache(false)
+						.mode(this.generalSettings.interpolation)
+						.colors(this.generalSettings.colorCount);
+				}
+
+				this.accesability.paletteContrast = chroma.contrast(sCol, eCol);
+
+				this.accesability.paletteDeltaE = chroma.deltaE(sCol, eCol);
 				this.accesability.lowestDeltaE = 100;
 				this.accesability.lowestContrast = 100;
 
@@ -328,6 +427,7 @@
 		outline: none;
 		-webkit-transition: 0.2s;
 		transition: opacity 0.2s;
+		background: #6366f1;
 	}
 
 	.slider::-webkit-slider-thumb {
