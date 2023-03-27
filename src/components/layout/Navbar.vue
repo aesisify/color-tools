@@ -10,14 +10,6 @@
 					{{ navLink.title }}
 				</router-link>
 			</li>
-			<li>
-				<a
-					href="https://github.com/aesisify/color-tools"
-					target="_blank"
-					class="py-2 px-4 text-sm uppercase tracking-widest">
-					GitHub Repo
-				</a>
-			</li>
 		</ul>
 	</nav>
 </template>

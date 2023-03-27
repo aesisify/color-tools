@@ -1,18 +1,21 @@
 # Color Tools
 
-This is a web application built with Vue 2.7 that generates color ramps for mainly pixel art projects, but ramps can be used anywhere if you wish. It allows users to generate color ramps based on a base color, with options for number of colors, saturation and brightness ranges, and hue shifts.
+This is a web application built with Vue that generates color ramps. It allows
+users to generate color ramps based on a base color, with options for number of
+colors, saturation and brightness ranges, and hue shifts.
 
-Uses [chroma-js](https://github.com/gka/chroma.js/) and [color-names](https://github.com/meodai/color-names).
+Uses [chroma-js](https://github.com/gka/chroma.js/) and
+[color-names](https://github.com/meodai/color-names).
 
 ## Usage
 
-To use the application, simply visit the [live demo](https://aesisify.github.io/color-tools/#/ramp-gen) or clone this repository.
-
-Once the application is loaded, you can select a base color by clicking on the color picker or entering a hex value. Then, adjust the other settings to generate your desired color ramp. Finally, you can copy the colors by clicking on them or copying the output JSON data at the bottom of the page.
+To use the application, simply visit the
+[website](https://aesisify.github.io/color-tools/#/ramp-gen) or clone this
+repository and check the installation guide below.
 
 ## Installation
 
-To install this application locally:
+To install this application locally after cloning the repository:
 
 ```bash
 npm install
@@ -21,10 +24,11 @@ npm run dev
 
 ## Todo
 
-* Save system for generated palettes.
-* Integrate [color-thief](https://github.com/lokesh/color-thief) for palette extraction from images.
-* A basic homepage?
+- Save system for generated palettes.
+- Integrate [color-thief](https://github.com/lokesh/color-thief) for palette
+  extraction from images.
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request.
+Contributions are welcome! If you'd like to contribute to this project, please
+fork the repository and submit a pull request.

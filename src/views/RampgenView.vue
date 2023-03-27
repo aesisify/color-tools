@@ -193,7 +193,7 @@
 							</template>
 						</div>
 					</div>
-					<div class="col-span-3">
+					<div class="col-span-1 md:col-span-3">
 						<div
 							class="text-sm uppercase tracking-widest border-b px-2 py-1 border-b-indigo-500">
 							Info
